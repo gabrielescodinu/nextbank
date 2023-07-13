@@ -34,7 +34,9 @@ import AppLayout from "@/Layouts/AppLayout.vue";
                                 <th scope="col" class="px-6 py-3">
                                     Post Title
                                 </th>
-                                <th scope="col" class="px-6 py-3 text-right">Action</th>
+                                <th scope="col" class="px-6 py-3 text-right">
+                                    Action
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -62,10 +64,10 @@ import AppLayout from "@/Layouts/AppLayout.vue";
                                         :href="route('posts.show', post.id)"
                                         >View</Link
                                     >
-                                    <a
-                                        href="#"
+                                    <Link
                                         class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                                        >Edit</a
+                                        :href="route('posts.edit', post.id)"
+                                        >Edit</Link
                                     >
                                     <a
                                         href="#"

@@ -55,11 +55,38 @@ class PostController extends Controller
         return Inertia::render('Posts/Edit', ['post' => $post]);
     }
 
-    public function update(Request $request, Post $post)
+    public function update(Request $request, $id)
     {
-        $post->update($request->all());
+        $request->validate([
+            'title' => 'required',
+            'description' => 'required',
+            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        $post = Post::findOrFail($id);
+
+        $imageName = $post->image;
+
+        if ($request->hasFile('image')) {
+            // Se esiste un'immagine, la cancelliamo
+            if ($imageName) {
+                Storage::delete(public_path('images/' . $imageName));
+            }
+
+            $image = $request->file('image');
+            $imageName = $image->hashName();
+            $image->move(public_path('images'), $imageName);
+        }
+
+        $post->update([
+            'title' => $request->title,
+            'description' => $request->description,
+            'image' => $imageName,
+        ]);
+
         return redirect()->route('posts.index');
     }
+
 
     public function destroy(Post $post)
     {
