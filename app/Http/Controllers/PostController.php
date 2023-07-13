@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -52,39 +53,37 @@ class PostController extends Controller
 
     public function edit(Post $post)
     {
-        return Inertia::render('Posts/Edit', ['post' => $post]);
+        return Inertia::render('Posts/Edit', [
+            'post' => $post,
+        ]);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Post $post)
     {
+        // dd($request->all());
+
         $request->validate([
             'title' => 'required',
             'description' => 'required',
-            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        $post = Post::findOrFail($id);
-
-        $imageName = $post->image;
+        $post->title = $request->title;
+        $post->description = $request->description;
 
         if ($request->hasFile('image')) {
-            // Se esiste un'immagine, la cancelliamo
-            if ($imageName) {
-                Storage::delete(public_path('images/' . $imageName));
+            if ($post->image) {
+                Storage::delete(public_path('images/' . $post->image));
             }
 
             $image = $request->file('image');
-            $imageName = $image->hashName();
-            $image->move(public_path('images'), $imageName);
+            $post->image = $image->hashName();
+            $image->move(public_path('images'), $post->image);
         }
 
-        $post->update([
-            'title' => $request->title,
-            'description' => $request->description,
-            'image' => $imageName,
-        ]);
+        $post->save();
 
-        return redirect()->route('posts.index');
+        return redirect()->route('posts.index')->with('success', 'Post updated successfully.');
     }
 
 
