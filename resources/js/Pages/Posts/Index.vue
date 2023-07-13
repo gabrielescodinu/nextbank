@@ -18,102 +18,65 @@ import AppLayout from "@/Layouts/AppLayout.vue";
                     class="bg-emerald-500 hover:bg-gray-800 duration-200 text-white p-4"
                     >Create New Post</Link
                 >
-                <ul class="mt-8">
-                    <li v-for="post in posts" :key="post.id">
-                        <Link :href="route('posts.show', post.id)">{{
-                            post.title
-                        }}</Link>
-                        <img :src="'/images/' + post.image" alt="Post Image" />
-                    </li>
-
-                    <div
-                        class="relative overflow-x-auto shadow-md sm:rounded-lg"
+                <div
+                    class="relative overflow-x-auto shadow-md sm:rounded-lg mt-8"
+                >
+                    <table
+                        class="w-full text-sm text-left text-gray-500 dark:text-gray-400"
                     >
-                        <table
-                            class="w-full text-sm text-left text-gray-500 dark:text-gray-400"
+                        <thead
+                            class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
                         >
-                            <thead
-                                class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+                            <tr>
+                                <th scope="col" class="px-6 py-3">
+                                    Post Image
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Post Title
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr
+                                v-for="post in posts"
+                                :key="post.id"
+                                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
                             >
-                                <tr>
-                                    <th scope="col" class="px-6 py-3">
-                                        Product name
-                                    </th>
-                                    <th scope="col" class="px-6 py-3">Color</th>
-                                    <th scope="col" class="px-6 py-3">
-                                        Category
-                                    </th>
-                                    <th scope="col" class="px-6 py-3">Price</th>
-                                    <th scope="col" class="px-6 py-3">
-                                        <span class="sr-only">Edit</span>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr
-                                    class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                                <td class="px-6 py-4">
+                                    <img
+                                        class="w-10 h-10 rounded-full"
+                                        :src="'/images/' + post.image"
+                                        alt="Post Image"
+                                    />
+                                </td>
+                                <td
+                                    scope="row"
+                                    class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                                 >
-                                    <th
-                                        scope="row"
-                                        class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                                    {{ post.title }}
+                                </td>
+                                <td class="px-6 py-4 text-right space-x-4">
+                                    <Link
+                                        class="font-medium text-green-600 dark:text-green-500 hover:underline"
+                                        :href="route('posts.show', post.id)"
+                                        >View</Link
                                     >
-                                        Apple MacBook Pro 17"
-                                    </th>
-                                    <td class="px-6 py-4">Silver</td>
-                                    <td class="px-6 py-4">Laptop</td>
-                                    <td class="px-6 py-4">$2999</td>
-                                    <td class="px-6 py-4 text-right">
-                                        <a
-                                            href="#"
-                                            class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                                            >Edit</a
-                                        >
-                                    </td>
-                                </tr>
-                                <tr
-                                    class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-                                >
-                                    <th
-                                        scope="row"
-                                        class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                                    <a
+                                        href="#"
+                                        class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                                        >Edit</a
                                     >
-                                        Microsoft Surface Pro
-                                    </th>
-                                    <td class="px-6 py-4">White</td>
-                                    <td class="px-6 py-4">Laptop PC</td>
-                                    <td class="px-6 py-4">$1999</td>
-                                    <td class="px-6 py-4 text-right">
-                                        <a
-                                            href="#"
-                                            class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                                            >Edit</a
-                                        >
-                                    </td>
-                                </tr>
-                                <tr
-                                    class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600"
-                                >
-                                    <th
-                                        scope="row"
-                                        class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                                    <a
+                                        href="#"
+                                        class="font-medium text-red-600 dark:text-red-500 hover:underline"
+                                        >Delete</a
                                     >
-                                        Magic Mouse 2
-                                    </th>
-                                    <td class="px-6 py-4">Black</td>
-                                    <td class="px-6 py-4">Accessories</td>
-                                    <td class="px-6 py-4">$99</td>
-                                    <td class="px-6 py-4 text-right">
-                                        <a
-                                            href="#"
-                                            class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                                            >Edit</a
-                                        >
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </ul>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </AppLayout>
