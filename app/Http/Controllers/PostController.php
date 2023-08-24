@@ -6,6 +6,7 @@ use App\Models\Post;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class PostController extends Controller
 {
@@ -25,13 +26,14 @@ class PostController extends Controller
         $request->validate([
             'title' => 'required',
             'description' => 'required',
-            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'nullable|image',
         ]);
 
         $imageName = null;
 
         if ($request->hasFile('image')) {
             $image = $request->file('image');
+            Log::info('File size: ' . $image->getSize());
             $imageName = $image->hashName();
             $image->move(public_path('images'), $imageName);
         }
@@ -60,12 +62,10 @@ class PostController extends Controller
 
     public function update(Request $request, Post $post)
     {
-        // dd($request->all());
-
         $request->validate([
             'title' => 'required',
             'description' => 'required',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'nullable',
         ]);
 
         $post->title = $request->title;
@@ -75,7 +75,7 @@ class PostController extends Controller
             if ($post->image) {
                 Storage::delete(public_path('images/' . $post->image));
             }
-
+            
             $image = $request->file('image');
             $post->image = $image->hashName();
             $image->move(public_path('images'), $post->image);
@@ -83,7 +83,7 @@ class PostController extends Controller
 
         $post->save();
 
-        return redirect()->route('posts.index')->with('success', 'Post updated successfully.');
+        return redirect()->route('posts.index');
     }
 
 

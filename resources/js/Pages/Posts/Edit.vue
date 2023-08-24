@@ -1,5 +1,6 @@
 <script setup>
 import { useForm } from "@inertiajs/vue3";
+// import inertia
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Link } from "@inertiajs/vue3";
 
@@ -12,15 +13,32 @@ const props = defineProps({
 const form = useForm({
     title: props.post.title,
     description: props.post.description,
-    image: props.post.image,
+    image: null,
 });
 
 // Definisci la funzione di submit
 const submit = () => {
-    form.put(route("posts.update", props.post.id), {
+    const data = new FormData();
+    for(let key in form) {
+        if(key === 'image' && form[key] instanceof File) {
+            data.append(key, form[key], form[key].name);
+        } else {
+            data.append(key, form[key]);
+        }
+    }
+    
+    Inertia.post(route("posts.update", props.post.id), data, {
+        _method: 'PUT',
         preserveScroll: true,
         onSuccess: () => form.reset("image"),
     });
+};
+
+
+
+const handleFileChange = (event) => {
+    form.image = event.target.files[0];
+    console.log(form.image); // log per verificare il file caricato
 };
 </script>
 
@@ -73,6 +91,11 @@ const submit = () => {
                                 id="image"
                                 type="file"
                                 @change="form.image = $event.target.files[0]"
+                            />
+                            <img
+                                v-if="!form.image && props.post.image"
+                                :src="`/images/${props.post.image}`"
+                                alt="Current image"
                             />
                         </div>
 
